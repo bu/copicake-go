@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"time"
 
 	"github.com/bu/copicake-go/v1"
@@ -10,7 +11,7 @@ import (
 func main() {
 	// create a new copicake client
 	cake, err := copicake.New(&copicake.ClientConfig{
-		ApiKey:        "",
+		ApiKey:        "YOUR_API_KEY",
 		RetryTimeout:  1 * time.Second,
 		RetryMaxTries: 5,
 	})
@@ -21,11 +22,11 @@ func main() {
 
 	// create new render job
 	job, err := cake.NewRenderRequest(copicake.RenderRequest{
-		TemplateID: "", // Get template ID
+		TemplateID: "YOUR_TEMPLATE_ID", // Get template ID
 		Changes: []copicake.C{
 			{
-				"name": "message",
-				"text": "2",
+				"name": "text-message", // change to your text layer name
+				"text": "Test",         // change to your text
 			},
 		},
 	})
@@ -59,5 +60,9 @@ func main() {
 		log.Fatalf("cannot get image: %s", err)
 	}
 
-	log.Printf("image: %+v", image)
+	// dont output to stdout, save to file
+	err = os.WriteFile("test.png", image, 0644)
+	if err != nil {
+		log.Fatalf("cannot save image: %s", err)
+	}
 }
